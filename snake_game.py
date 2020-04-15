@@ -13,24 +13,28 @@ green = (0, 255, 0)
 blue = (50, 153, 213)
 
 dis_width = 600
-dis_height = 600
+dis_height = 400
 
-dis = pygame.display.set_mode((dis_width,dis_width))
+dis = pygame.display.set_mode((dis_width,dis_height))
 pygame.display.set_caption('Snake game by Maszt071')
 
+#tworzy obiekt do śledzenia czasu
 clock = pygame.time.Clock()
 snake_speed = 15
 snake_block = 10
 
 font_style = pygame.font.SysFont("bahnschrift",25)
-score_font = pygame.font.SysFont("comicsansms",35)
+score_font = pygame.font.SysFont("comicsansms",20)
 
 def Your_score(score):
-    value = score_font.render("Your Score: " + str(score), True, yellow)
+    # render tworzy nową powierzchnię z podanym tekstem, parametry: tekst, antyalias, kolor, tło
+    value = score_font.render("Your Score: " + str(score), True, green)
+    #blit rysuje jeden obrazek na drugim, parametry: źródło, cel.
     dis.blit(value, [0, 0])
 
 def my_snake(snake_block, snake_list):
     for x in snake_list:
+        # draw.rect parametry: powierzchnia, kolor, obiekt Rect, grubość obramowania.
         pygame.draw.rect(dis,yellow,[x[0],x[1],snake_block,snake_block])
 
 def message(msg,color):
@@ -50,16 +54,17 @@ def gameLoop():
     snake_List = []
     Length_of_snake = 1
 
+    #food location
+
     foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
-    foody = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
+    foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
 
     while not game_over:
-        while game_close == True:
-            dis.fill(black)
+        while game_close == True: #when lose
+            dis.fill(red) #wypełnia obrazek kolorem
             message("You lost! Press Q-Quit or P-Play again", white)
             pygame.display.update()
-
-            for event in pygame.event.get():
+            for event in pygame.event.get(): #event zapis zajścia w systemie komputerowym określonej sytuacji, np. poruszenie myszką, kliknięcie, pygame.event.get() pobiera zdarzenia z kolejki zdarzeń
                 if event.type==pygame.KEYDOWN:
                     if event.key==pygame.K_q:
                         game_over = True
@@ -90,6 +95,7 @@ def gameLoop():
         y1 += y1_change
         dis.fill(black)
         pygame.draw.rect(dis,red,[foodx, foody,snake_block,snake_block])
+        #snake head location
         snake_Head =[]
         snake_Head.append(x1)
         snake_Head.append(y1)
@@ -106,11 +112,12 @@ def gameLoop():
 
         #pygame.draw.rect(dis,yellow,[x1,y1,snake_block,snake_block])
         pygame.display.update()
+        #if snake head meets food than snake length is longer 1
         if x1==foodx and y1==foody:
             foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
             foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
             Length_of_snake +=1
-
+        #tick kontroluje ile milisekund upłynęło od poprzedniego wywołania
         clock.tick(snake_speed)
 
     pygame.quit()
