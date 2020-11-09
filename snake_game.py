@@ -2,6 +2,22 @@ import pygame
 import time
 import random
 
+
+class Snake:
+    def __init__(self):
+        self.length = 1
+        self.start_position = [((screen_height/2), (screen_width/2))]
+        self.color = white
+
+
+class Food:
+    pass
+
+
+class Window:
+    pass
+
+
 pygame.init()
 
 #colors RGB
@@ -12,10 +28,10 @@ red = (255,0,0)
 green = (0, 255, 0)
 blue = (50, 153, 213)
 
-dis_width = 600
-dis_height = 400
+screen_width = 1200
+screen_height = 800
 
-dis = pygame.display.set_mode((dis_width,dis_height))
+screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Snake game by Maszt071')
 
 #tworzy obiekt do śledzenia czasu
@@ -30,38 +46,37 @@ def Your_score(score):
     # render tworzy nową powierzchnię z podanym tekstem, parametry: tekst, antyalias, kolor, tło
     value = score_font.render("Your Score: " + str(score), True, green)
     #blit rysuje jeden obrazek na drugim, parametry: źródło, cel.
-    dis.blit(value, [0, 0])
+    screen.blit(value, [0, 0])
 
 def my_snake(snake_block, snake_list):
     for x in snake_list:
         # draw.rect parametry: powierzchnia, kolor, obiekt Rect, grubość obramowania.
-        pygame.draw.rect(dis,yellow,[x[0],x[1],snake_block,snake_block])
+        pygame.draw.rect(screen, yellow, [x[0], x[1], snake_block, snake_block])
 
 def message(msg,color):
     mesg = font_style.render(msg, True, color)
-    dis.blit(mesg,[dis_width/6, dis_height/3])
+    screen.blit(mesg, [screen_width / 6, screen_height / 3])
 
 def gameLoop():
     game_over = False
     game_close = False
 
-    x1 = dis_width / 2
-    y1 = dis_height / 2
+    x1 = screen_width / 2
+    y1 = screen_height / 2
 
     x1_change = 0
     y1_change = 0
-
     snake_List = []
     Length_of_snake = 1
 
     #food location
 
-    foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
-    foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
+    foodx = round(random.randrange(0, screen_width - snake_block) / 10.0) * 10.0
+    foody = round(random.randrange(0, screen_height - snake_block) / 10.0) * 10.0
 
     while not game_over:
         while game_close == True: #when lose
-            dis.fill(red) #wypełnia obrazek kolorem
+            screen.fill(red) #wypełnia obrazek kolorem
             message("You lost! Press Q-Quit or P-Play again", white)
             pygame.display.update()
             for event in pygame.event.get(): #event zapis zajścia w systemie komputerowym określonej sytuacji, np. poruszenie myszką, kliknięcie, pygame.event.get() pobiera zdarzenia z kolejki zdarzeń
@@ -72,8 +87,8 @@ def gameLoop():
                     if event.key == pygame.K_p:
                         gameLoop()
         for event in pygame.event.get():
-            if event.type==pygame.QUIT:
-                game_over=True
+            if event.type == pygame.QUIT:
+                game_over = True
             if event.type == pygame.KEYDOWN:
                 if event.key ==pygame.K_LEFT:
                     x1_change = -snake_block
@@ -88,13 +103,13 @@ def gameLoop():
                     y1_change = snake_block
                     x1_change = 0
 
-        if x1>=dis_width or x1 <0 or y1>=dis_height or y1 <0:
+        if x1>=screen_width or x1 <0 or y1>=screen_height or y1 <0:
             game_close = True
 
         x1 += x1_change
         y1 += y1_change
-        dis.fill(black)
-        pygame.draw.rect(dis,red,[foodx, foody,snake_block,snake_block])
+        screen.fill(black)
+        pygame.draw.rect(screen, red, [foodx, foody, snake_block, snake_block])
         #snake head location
         snake_Head =[]
         snake_Head.append(x1)
@@ -114,8 +129,8 @@ def gameLoop():
         pygame.display.update()
         #if snake head meets food than snake length is longer 1
         if x1==foodx and y1==foody:
-            foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
-            foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
+            foodx = round(random.randrange(0, screen_width - snake_block) / 10.0) * 10.0
+            foody = round(random.randrange(0, screen_height - snake_block) / 10.0) * 10.0
             Length_of_snake +=1
         #tick kontroluje ile milisekund upłynęło od poprzedniego wywołania
         clock.tick(snake_speed)
