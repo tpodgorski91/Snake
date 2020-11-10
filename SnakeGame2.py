@@ -2,6 +2,75 @@ import pygame
 import sys
 import random
 
+# create Snake, App or/and Food classes
+
+
+class Snake:
+    def __init__(self):
+        self.length = 1
+        self.position = [((screen_width/2), (screen_height/2))]
+        self.direction = random.choice([up, down, left, right])
+        # self.size = size
+
+    def position_container(self):
+        return self.position[0]
+
+    # moving is already covered by bult-in function 'move_ip'
+    def way(self, point):
+        self.direction = point
+
+    def new(self):
+        current_position = self.position_container()
+        x, y = self.direction
+        newer = ((current_position[0] + x), (current_position[1] + y))
+        self.position.insert(0, newer)
+        if len(self.position) > self.length:
+            self.position.pop()
+        return self.position[0]
+
+    def draw(self):
+        for p in self.position:
+            print(self.position)
+            rectangular = pygame.Rect((p[0], p[1]), (15, 15))
+            pygame.draw.rect(surface, RED, rectangular)
+
+    def handle_keys(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key in direction:
+                    if event.key == pygame.K_UP:
+                        self.way(up)
+                    elif event.key == pygame.K_DOWN:
+                        self.way(down)
+                    elif event.key == pygame.K_LEFT:
+                        self.way(left)
+                    elif event.key == pygame.K_RIGHT:
+                        self.way(right)
+            # surface.fill(GRAY)
+            # screen.blit(surface, (0, 0))
+            # pygame.display.flip()
+
+class Food:
+    def __init__(self):
+        self.position = position
+        self.size = size
+
+
+# snake is moving in some direction following keydown click by gamer
+# there is one food at once on the screen
+# when snake eats food it is growing by 1
+# when snakes eats itself game is over
+def move():
+    pass
+
+
+def handle_keys1():
+    pass
+
+
 BLACK = (0, 0, 0)
 GRAY = (127, 127, 127)
 WHITE = (255, 255, 255)
@@ -25,57 +94,28 @@ down = (0,10)
 left = (-10,0)
 right = (10,0)
 
-
-def random_direction():
-    return random.choice([up, down, left, right])
-
-
-def position_container():
-    return position[0]
-
-
-def new():
-    current_position = position_container()
-    x,y = random_direction()
-    newer = ((current_position[0]+x),(current_position[1]+y))
-    position.insert(0, newer)
-    if len(position)>2:
-        position.pop()
-    return position[0]
-
-
-rectangular = pygame.Rect(new(), (15, 15))
+# rectangular = pygame.Rect(new(), (15, 15))
 
 direction = {pygame.K_LEFT: [-10, 0], pygame.K_RIGHT: [10, 0], pygame.K_UP: [0, -10], pygame.K_DOWN: [0, 10]}
-screen.blit(surface, (0, 0))
+
 start_position = (screen_width/2, screen_height/2)
 # rect = pygame.Rect(start_position, (15, 15))
 # snake_head = pygame.draw.rect(surface, RED, rect)
 pygame.display.update()
-
-
-def handle_keys():
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        # elif event.type == pygame.KEYDOWN:
-        #     if event.key in direction:
-        #         v = direction[event.key]
-        #         rect.move_ip(v)
-        #         pygame.display.update()
-        surface.fill(GRAY)
-        pygame.draw.rect(surface, RED, rectangular)
-        screen.blit(surface, (0, 0))
-        pygame.display.flip()
-
+# rectangular = pygame.Rect(new(), (15, 15))
 
 def main():
     pygame.init()
     clock = pygame.time.Clock()
+
+    snake = Snake()
     while True:
         clock.tick(10)
-        handle_keys()
-
+        snake.handle_keys()
+        surface.fill(GRAY)
+        pygame.display.flip()
+        snake.new()
+        snake.draw()
+        screen.blit(surface, (0, 0))
 
 main()
