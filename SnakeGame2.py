@@ -19,7 +19,7 @@ class Snake:
     def way(self, point):
         self.direction = point
 
-    def new(self):
+    def move(self):
         current_position = self.position_container()
         x, y = self.direction
         newer = ((current_position[0] + x), (current_position[1] + y))
@@ -30,7 +30,7 @@ class Snake:
 
     def draw(self):
         for p in self.position:
-            print(self.position)
+            # print(self.position)
             rectangular = pygame.Rect((p[0], p[1]), (15, 15))
             pygame.draw.rect(surface, RED, rectangular)
 
@@ -53,22 +53,21 @@ class Snake:
             # screen.blit(surface, (0, 0))
             # pygame.display.flip()
 
+
 class Food:
     def __init__(self):
         self.position = position
-        self.size = size
+        # self.size = size
 
-
+    @staticmethod
+    def positions():
+        x = random.randrange(0, screen_width, rect_size)
+        y = random.randrange(0, screen_height, rect_size)
+        return [x, y]
 # snake is moving in some direction following keydown click by gamer
 # there is one food at once on the screen
 # when snake eats food it is growing by 1
 # when snakes eats itself game is over
-def move():
-    pass
-
-
-def handle_keys1():
-    pass
 
 
 BLACK = (0, 0, 0)
@@ -81,6 +80,14 @@ BLUE = (0, 0, 255)
 # screen - background
 screen_width = 1200
 screen_height = 800
+rect_size = 15
+
+# import random
+#
+# ekran = [((1200),(800))]
+# for i in range(10):
+#
+#     print([x, y])
 screen = pygame.display.set_mode((screen_width, screen_height))
 surface = pygame.Surface(screen.get_size())
 surface = surface.convert()
@@ -109,12 +116,15 @@ def main():
     clock = pygame.time.Clock()
 
     snake = Snake()
+    food = Food()
+    print(food.positions())
+    print("")
     while True:
         clock.tick(10)
         snake.handle_keys()
         surface.fill(GRAY)
         pygame.display.flip()
-        snake.new()
+        snake.move()
         snake.draw()
         screen.blit(surface, (0, 0))
 
