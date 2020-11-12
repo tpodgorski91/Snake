@@ -27,8 +27,9 @@ class Snake:
 
     def draw(self):
         for p in self.position:
+            # print("dupa")
             # print(self.position)
-            rectangular = pygame.Rect((p[0], p[1]), (15, 15))
+            rectangular = pygame.Rect((p[0], p[1]), (rect_size, rect_size))
             pygame.draw.rect(surface, GREEN, rectangular)
 
     def handle_keys(self):
@@ -49,20 +50,19 @@ class Snake:
 
 class Food:
     def __init__(self):
-        self.position = self.randomize_position()
+        self.position = (0, 0)
+        self.randomize_position()
         # self.size = size
 
     # @staticmethod
     def randomize_position(self):
-        x = random.randrange(0, screen_width, rect_size)
-        y = random.randrange(0, screen_height, rect_size)
-        x, y = self.position
-        return self.position
+        self.position = ((random.randrange(0, screen_width, rect_size)), (random.randrange(0, screen_height, rect_size)))
 
     def draw(self):
-        for p in self.position:
-            rectangular = pygame.Rect((p[0], p[1]), (15, 15))
-            pygame.draw.rect(surface, RED, rectangular)
+        # print("plecy")
+        # print(self.position)
+        rectangular = pygame.Rect((self.position[0], self.position[1]), (rect_size, rect_size))
+        pygame.draw.rect(surface, RED, rectangular)
 
 # snake is moving in some direction following keydown click by gamer
 # there is one food at once on the screen
@@ -78,24 +78,26 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
 # screen - background
-screen_width = 1200
-screen_height = 800
-rect_size = 15
+screen_width = 600
+screen_height = 480
+rect_size = 20
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 surface = pygame.Surface(screen.get_size())
 surface = surface.convert()
 
 # snake - player
-up = (0, -10)
-down = (0,10)
-left = (-10,0)
-right = (10,0)
+up = (0, -20)
+down = (0,20)
+left = (-20,0)
+right = (20,0)
 
 
 def main():
     pygame.init()
     clock = pygame.time.Clock()
+    surface.fill(GRAY)
+    # pygame.display.flip()
     snake = Snake()
     food = Food()
     food.draw()
@@ -103,13 +105,16 @@ def main():
         clock.tick(10)
         snake.handle_keys()
         surface.fill(GRAY)
-        pygame.display.flip()
+        # pygame.display.flip()
         snake.move()
         if snake.head_position() == food.position:
+            snake.length += 1
             food.randomize_position()
         snake.draw()
         food.draw()
         screen.blit(surface, (0, 0))
+        pygame.display.update()
+
 
 
 main()
