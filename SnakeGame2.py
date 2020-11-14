@@ -8,7 +8,7 @@ class Snake:
         self.length = 1
         self.position = [((screen_width/2), (screen_height/2))]
         self.direction = random.choice([up, down, left, right])
-        # self.size = size
+        self.score = 0
 
     def head_position(self):
         return self.position[0]
@@ -48,6 +48,8 @@ class Snake:
                     self.way(right)
 
 
+
+
 class Food:
     def __init__(self):
         self.position = (0, 0)
@@ -70,6 +72,7 @@ class Food:
 # when snakes eats itself game is over
 
 
+
 BLACK = (0, 0, 0)
 GRAY = (127, 127, 127)
 WHITE = (255, 255, 255)
@@ -86,6 +89,8 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 surface = pygame.Surface(screen.get_size())
 surface = surface.convert()
 
+
+
 # snake - player
 up = (0, -20)
 down = (0,20)
@@ -95,11 +100,13 @@ right = (20,0)
 
 def main():
     pygame.init()
+    font = pygame.font.SysFont("bahnschrift", 25)
     clock = pygame.time.Clock()
     surface.fill(GRAY)
     # pygame.display.flip()
     snake = Snake()
     food = Food()
+
     food.draw()
     while True:
         clock.tick(10)
@@ -109,10 +116,14 @@ def main():
         snake.move()
         if snake.head_position() == food.position:
             snake.length += 1
+            snake.score += 1
             food.randomize_position()
+        text = font.render(f"Score: {snake.score}", True, BLUE)
         snake.draw()
         food.draw()
         screen.blit(surface, (0, 0))
+        screen.blit(text, [0, 0])
+
         pygame.display.update()
 
 
