@@ -27,8 +27,12 @@ class Snake:
 
     def draw(self):
         for p in self.position:
-            # print("dupa")
-            # print(self.position)
+            if screen_width < p[0] or p[0] < 0:
+                pygame.quit()
+                sys.exit()
+            elif screen_height < p[1] or p[1] < 0:
+                pygame.quit()
+                sys.exit()
             rectangular = pygame.Rect((p[0], p[1]), (rect_size, rect_size))
             pygame.draw.rect(surface, GREEN, rectangular)
 
@@ -48,21 +52,15 @@ class Snake:
                     self.way(right)
 
 
-
-
 class Food:
     def __init__(self):
         self.position = (0, 0)
         self.randomize_position()
-        # self.size = size
 
-    # @staticmethod
     def randomize_position(self):
         self.position = ((random.randrange(0, screen_width, rect_size)), (random.randrange(0, screen_height, rect_size)))
 
     def draw(self):
-        # print("plecy")
-        # print(self.position)
         rectangular = pygame.Rect((self.position[0], self.position[1]), (rect_size, rect_size))
         pygame.draw.rect(surface, RED, rectangular)
 
@@ -70,7 +68,6 @@ class Food:
 # there is one food at once on the screen
 # when snake eats food it is growing by 1
 # when snakes eats itself game is over
-
 
 
 BLACK = (0, 0, 0)
@@ -89,8 +86,6 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 surface = pygame.Surface(screen.get_size())
 surface = surface.convert()
 
-
-
 # snake - player
 up = (0, -20)
 down = (0,20)
@@ -106,7 +101,6 @@ def main():
     # pygame.display.flip()
     snake = Snake()
     food = Food()
-
     food.draw()
     while True:
         clock.tick(10)
@@ -123,9 +117,7 @@ def main():
         food.draw()
         screen.blit(surface, (0, 0))
         screen.blit(text, [0, 0])
-
         pygame.display.update()
-
 
 
 main()
