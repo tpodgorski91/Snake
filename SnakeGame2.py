@@ -4,11 +4,13 @@ import random
 
 
 class Snake:
+
     def __init__(self):
         self.length = 1
         self.position = [((screen_width/2), (screen_height/2))]
         self.direction = random.choice([up, down, left, right])
         self.score = 0
+        self.empty_list = []
 
     def head_position(self):
         return self.position[0]
@@ -19,7 +21,14 @@ class Snake:
     def move(self):
         current_position = self.head_position()
         x, y = self.direction
+        self.empty_list.append(current_position)
         newer = ((current_position[0] + x), (current_position[1] + y))
+        if self.length > 2:
+            for i in range(1, self.length):
+                self.empty_list = self.empty_list[-self.length:]
+                if newer == self.empty_list[i]:
+                    pygame.quit()
+                    sys.exit()
         self.position.insert(0, newer)
         if len(self.position) > self.length:
             self.position.pop()
@@ -64,11 +73,6 @@ class Food:
         rectangular = pygame.Rect((self.position[0], self.position[1]), (rect_size, rect_size))
         pygame.draw.rect(surface, RED, rectangular)
 
-# snake is moving in some direction following keydown click by gamer
-# there is one food at once on the screen
-# when snake eats food it is growing by 1
-# when snakes eats itself game is over
-
 
 BLACK = (0, 0, 0)
 GRAY = (127, 127, 127)
@@ -77,7 +81,6 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-# screen - background
 screen_width = 600
 screen_height = 480
 rect_size = 20
@@ -86,7 +89,6 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 surface = pygame.Surface(screen.get_size())
 surface = surface.convert()
 
-# snake - player
 up = (0, -20)
 down = (0,20)
 left = (-20,0)
@@ -98,7 +100,6 @@ def main():
     font = pygame.font.SysFont("bahnschrift", 25)
     clock = pygame.time.Clock()
     surface.fill(GRAY)
-    # pygame.display.flip()
     snake = Snake()
     food = Food()
     food.draw()
@@ -106,7 +107,6 @@ def main():
         clock.tick(10)
         snake.handle_keys()
         surface.fill(GRAY)
-        # pygame.display.flip()
         snake.move()
         if snake.head_position() == food.position:
             snake.length += 1
@@ -121,3 +121,4 @@ def main():
 
 
 main()
+
